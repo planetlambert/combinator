@@ -34,7 +34,17 @@ var S = Combinator{
 
 var SKI = Basis{S, K, I}
 
-func Transform(statement string, b Basis) (string, error) {
+var Iota = Basis{
+	S,
+	K,
+	Combinator{
+		Name:       "i",
+		Arguments:  []string{"x"},
+		Definition: "xSK",
+	},
+}
+
+func (b Basis) Transform(statement string) (string, error) {
 	if err := isWellDefined(statement); err != nil {
 		return "", err
 	}

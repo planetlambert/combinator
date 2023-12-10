@@ -5,11 +5,27 @@ import (
 )
 
 func reduce(root *TreeNode, b Basis, applicativeOrder bool) *TreeNode {
-	leftMostLeaf := getLeftMostLeaf(root)
+	if root.IsLeaf {
+		return root
+	}
 
+	newRoot := rewrite(root, b, applicativeOrder)
+
+	if newRoot.IsLeaf {
+		return newRoot
+	}
+
+	newRoot.Left = reduce(newRoot.Left, b, applicativeOrder)
+	newRoot.Right = reduce(newRoot.Right, b, applicativeOrder)
+	return newRoot
+}
+
+func rewrite(root *TreeNode, b Basis, applicativeOrder bool) *TreeNode {
+	leftMostLeaf := getLeftMostLeaf(root)
 	combinator, ok := findCombinator(leftMostLeaf.Leaf, b)
 	numArgs := len(combinator.Arguments)
-	if ok && numArgs <= numNodesToRoot(leftMostLeaf, root) {
+	numNodesToRoot := numNodesToRoot(leftMostLeaf, root)
+	if ok && numArgs <= numNodesToRoot {
 		// Construct new tree based off of combinator
 		combinatorRoot := parse(combinator.Definition)
 
@@ -24,31 +40,40 @@ func reduce(root *TreeNode, b Basis, applicativeOrder bool) *TreeNode {
 			}
 		}
 
-		// Rewrite the tree
-		combinatorRoot = rewrite(combinator, argumentNodes, combinatorRoot)
+		// Apply the combinator
+		combinatorRoot = apply(combinator, argumentNodes, combinatorRoot)
 
 		// Swap parents
 		if !rewriteRoot.IsRoot {
 			combinatorRoot.IsRoot = false
 			combinatorRoot.Parent = rewriteRoot.Parent
-			combinatorRoot.Parent.Left = combinatorRoot
+			if rewriteRoot != root {
+				combinatorRoot.Parent.Left = combinatorRoot
+			}
 		}
 
-		return reduce(getRoot(combinatorRoot), b, applicativeOrder)
-	} else {
-		return root
+		originalRoot := getNthParent(combinatorRoot, numNodesToRoot-numArgs)
+		return rewrite(originalRoot, b, applicativeOrder)
 	}
+	return root
 }
 
-func rewrite(combinator Combinator, argumentNodes []*TreeNode, combinatorRoot *TreeNode) *TreeNode {
+func apply(combinator Combinator, argumentNodes []*TreeNode, combinatorRoot *TreeNode) *TreeNode {
 	if combinatorRoot.IsLeaf {
-		arg := copy(argumentNodes[slices.Index(combinator.Arguments, combinatorRoot.Leaf)])
+		index := slices.Index(combinator.Arguments, combinatorRoot.Leaf)
+
+		// For "improper" combinators. That is, combinators that are "defined" from other combinators
+		if index == -1 {
+			return combinatorRoot
+		}
+
+		arg := copy(argumentNodes[index])
 		arg.IsRoot = combinatorRoot.IsRoot
 		arg.Parent = combinatorRoot.Parent
 		return arg
 	}
 
-	combinatorRoot.Left = rewrite(combinator, argumentNodes, combinatorRoot.Left)
-	combinatorRoot.Right = rewrite(combinator, argumentNodes, combinatorRoot.Right)
+	combinatorRoot.Left = apply(combinator, argumentNodes, combinatorRoot.Left)
+	combinatorRoot.Right = apply(combinator, argumentNodes, combinatorRoot.Right)
 	return combinatorRoot
 }
