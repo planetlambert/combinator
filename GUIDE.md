@@ -6,8 +6,6 @@ The guide annotates the paper section-by-section. I only quote directly from the
 
 ## Introduction by Quine
 
-
-
 ## Section 1
 
 ## Section 2
@@ -19,3 +17,5 @@ The guide annotates the paper section-by-section. I only quote directly from the
 ## Section 5
 
 ## Section 6
+
+## Overall Thoughts

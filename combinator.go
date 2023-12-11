@@ -14,35 +14,65 @@ type (
 	Basis []Combinator
 )
 
-var I = Combinator{
-	Name:       "I",
-	Arguments:  []string{"x"},
-	Definition: "x",
-}
+// SK and SKI
+var (
+	S = Combinator{
+		Name:       "S",
+		Arguments:  []string{"x", "y", "z"},
+		Definition: "xz(yz)",
+	}
 
-var K = Combinator{
-	Name:       "K",
-	Arguments:  []string{"x", "y"},
-	Definition: "x",
-}
+	K = Combinator{
+		Name:       "K",
+		Arguments:  []string{"x", "y"},
+		Definition: "x",
+	}
 
-var S = Combinator{
-	Name:       "S",
-	Arguments:  []string{"x", "y", "z"},
-	Definition: "xz(yz)",
-}
-
-var SKI = Basis{S, K, I}
-
-var Iota = Basis{
-	S,
-	K,
-	Combinator{
-		Name:       "i",
+	I = Combinator{
+		Name:       "I",
 		Arguments:  []string{"x"},
-		Definition: "xSK",
-	},
-}
+		Definition: "x",
+	}
+
+	SK  = Basis{S, K}
+	SKI = Basis{S, K, I}
+)
+
+// BCKW
+var (
+	B = Combinator{
+		Name:       "B",
+		Arguments:  []string{"x", "y", "z"},
+		Definition: "x(yz)",
+	}
+
+	C = Combinator{
+		Name:       "C",
+		Arguments:  []string{"x", "y", "z"},
+		Definition: "xzy",
+	}
+
+	W = Combinator{
+		Name:       "C",
+		Arguments:  []string{"x", "y"},
+		Definition: "xyy",
+	}
+
+	BCKW = Basis{B, C, K, W}
+)
+
+// Iota
+var (
+	Iota = Basis{
+		S,
+		K,
+		Combinator{
+			Name:       "i",
+			Arguments:  []string{"x"},
+			Definition: "xSK",
+		},
+	}
+)
 
 func (b Basis) Transform(statement string) (string, error) {
 	if err := isWellDefined(statement); err != nil {
