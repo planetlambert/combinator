@@ -7,7 +7,7 @@ See the section-by-section guide to the paper [here](./GUIDE.md).
 
 ### Progress
 
-- [ ] Introduction by Quine
+- [X] Introduction by Quine
 - [ ] Section 1
 - [ ] Section 2
 - [ ] Section 3
