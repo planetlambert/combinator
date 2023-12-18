@@ -77,13 +77,13 @@ $$\overline{a} \vee \overline{b} \\;\\;\\; \text{and} \\;\\;\\; \overline{a \\& 
 
 both of which are the same (using [De Morgan's theorem](https://en.wikipedia.org/wiki/De_Morgan%27s_laws)). Schönfinkel adopts the $|$ symbol as his operator (so $a|b$), and derives the five former fundamental connectives.
 
-### Existentially Quantified Sheffer Stroke
+### Universally Quantified Sheffer Stroke
 
 Schönfinkel now wants to move on from [propositional logic](https://en.wikipedia.org/wiki/Propositional_calculus) to [first-order logic](https://en.wikipedia.org/wiki/First-order_logic) to see if he can modify his fundamental connective to include [quantification](https://en.wikipedia.org/wiki/Quantifier_(logic)). This connective he defines as
 
 $$(x)[\overline{f(x)} \vee \overline{g(x)}]$$
 
-or "for all $x$, either $f(x)$ is false or $g(x)$ is false". He extends the Sheffer Stroke symbol $|$ with the quantifier $x$, resulting in $|^x$. The full connective being
+or "for all $x$, either $f(x)$ is false or $g(x)$ is false". He extends the Sheffer Stroke symbol $|$ with a [universal quantifier](https://en.wikipedia.org/wiki/Universal_quantification) $x$, resulting in $|^x$. The full connective being
 
 $$f(x) \\;|^x \\;g(x)$$
 
