@@ -7,8 +7,8 @@ See the section-by-section guide to the paper [here](./GUIDE.md).
 
 ### Progress
 
-- [X] Introduction by Quine
-- [ ] Section 1
+- [X] [Introduction by Quine](./GUIDE.md#introduction-by-quine)
+- [X] [Section 1](./GUIDE.md#section-1)
 - [ ] Section 2
 - [ ] Section 3
 - [ ] Section 4
