@@ -73,7 +73,7 @@ Schönfinkel starts out by listing the fundamental propositional connectives,
 
 and that there isn't one listed from which all the others can be rederived. There is, though, a particular connective (first published by [Sheffer](https://en.wikipedia.org/wiki/Sheffer_stroke), named the [Sheffer Stroke](https://en.wikipedia.org/wiki/Sheffer_stroke)) that is not in the list above,
 
-$$\overline{a} \vee \overline{b} \;\;\; \text{and} \;\;\; \overline{a \\& b}$$
+$$\overline{a} \vee \overline{b} \\;\\;\\; \text{and} \\;\\;\\; \overline{a \\& b}$$
 
 both of which are the same (using [De Morgan's theorem](https://en.wikipedia.org/wiki/De_Morgan%27s_laws)). Schönfinkel adopts the $|$ symbol as his operator (so $a|b$), and derives the five former fundamental connectives.
 
@@ -85,7 +85,7 @@ $$(x)[\overline{f(x)} \vee \overline{g(x)}]$$
 
 or "for all $x$, either $f(x)$ is false or $g(x)$ is false". He extends the Sheffer Stroke symbol $|$ with the quantifier $x$, resulting in $|^x$. The full connective being
 
-$$f(x) \;|^x \;g(x)$$
+$$f(x) \\;|^x \\;g(x)$$
 
 Schönfinkel then uses this definition to rederive all connectives and quantifiers in first-order logic. It might not be immediately clear what he is doing here. Let's take the $\overline{a}$ as an example. Schönfinkel is saying the $x$ in $a|^xa$ does not play a role, so really we are saying "for all $x$, either $a$ is false or $a$ is false". From this we can be sure that $a$ is false, or $\overline{a}$. He uses similar tactics in the rest of the derivations.
 
