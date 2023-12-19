@@ -4,7 +4,7 @@ import (
 	"slices"
 )
 
-func reduce(root *TreeNode, b Basis, applicativeOrder bool) *TreeNode {
+func reduce(root *treeNode, b Basis, applicativeOrder bool) *treeNode {
 	if root.IsLeaf {
 		return root
 	}
@@ -20,7 +20,7 @@ func reduce(root *TreeNode, b Basis, applicativeOrder bool) *TreeNode {
 	return newRoot
 }
 
-func rewrite(root *TreeNode, b Basis, applicativeOrder bool) *TreeNode {
+func rewrite(root *treeNode, b Basis, applicativeOrder bool) *treeNode {
 	leftMostLeaf := getLeftMostLeaf(root)
 	combinator, ok := findCombinator(leftMostLeaf.Leaf, b)
 	numArgs := len(combinator.Arguments)
@@ -58,7 +58,7 @@ func rewrite(root *TreeNode, b Basis, applicativeOrder bool) *TreeNode {
 	return root
 }
 
-func apply(combinator Combinator, argumentNodes []*TreeNode, combinatorRoot *TreeNode) *TreeNode {
+func apply(combinator Combinator, argumentNodes []*treeNode, combinatorRoot *treeNode) *treeNode {
 	if combinatorRoot.IsLeaf {
 		index := slices.Index(combinator.Arguments, combinatorRoot.Leaf)
 

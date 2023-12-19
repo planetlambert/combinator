@@ -1,44 +1,53 @@
 package combinator
 
-type TreeNode struct {
-	Left   *TreeNode
-	Right  *TreeNode
-	Parent *TreeNode
+// A simple binary tree
+type treeNode struct {
+	Left   *treeNode
+	Right  *treeNode
+	Parent *treeNode
 	IsLeaf bool
 	IsRoot bool
-	Leaf   string
+	Leaf   string // If `IsLeaf`, the leaf's content
 }
 
-func getRoot(tree *TreeNode) *TreeNode {
+// Returns the tree's root given any treeNode
+func getRoot(tree *treeNode) *treeNode {
 	if tree.IsRoot {
 		return tree
 	}
 	return getRoot(tree.Parent)
 }
 
-func getLeftMostLeaf(tree *TreeNode) *TreeNode {
+// Returns the left-most leaf from the current node
+func getLeftMostLeaf(tree *treeNode) *treeNode {
 	if tree.IsLeaf {
 		return tree
 	}
 	return getLeftMostLeaf(tree.Left)
 }
 
-func getNthParent(tree *TreeNode, n int) *TreeNode {
+// Return's the n'th parent from the current node
+func getNthParent(tree *treeNode, n int) *treeNode {
 	if tree.IsRoot || n == 0 {
 		return tree
 	}
 	return getNthParent(tree.Parent, n-1)
 }
 
-func numNodesToRoot(descendent *TreeNode, root *TreeNode) int {
+// Returns the number of nodes to get to the root from the current node
+func numNodesToRoot(descendent *treeNode, root *treeNode) int {
 	if descendent == root {
 		return 0
 	}
 	return 1 + numNodesToRoot(descendent.Parent, root)
 }
 
-func getNRightSiblings(descendent *TreeNode, n int) []*TreeNode {
-	siblings := []*TreeNode{}
+// Returns `n` "Right Siblings" (this is what I am calling them, but I'm sure
+// there must be some correct technical name for them). The first "Right Sibling"
+// of a node is it's parent's right child. The second "Right Sibling" is the
+// node's grandparent's right child, and so on...
+func getNRightSiblings(descendent *treeNode, n int) []*treeNode {
+	siblings := []*treeNode{}
 	current := descendent
 	for i := 0; i < n; i++ {
 		current = current.Parent
@@ -47,9 +56,10 @@ func getNRightSiblings(descendent *TreeNode, n int) []*TreeNode {
 	return siblings
 }
 
-func copy(root *TreeNode) *TreeNode {
+// Recursively copies an entire subtree
+func copy(root *treeNode) *treeNode {
 	if root.IsLeaf {
-		return &TreeNode{
+		return &treeNode{
 			IsRoot: root.IsRoot,
 			Parent: root.Parent,
 			IsLeaf: root.IsLeaf,
@@ -57,7 +67,7 @@ func copy(root *TreeNode) *TreeNode {
 		}
 	}
 
-	node := &TreeNode{
+	node := &treeNode{
 		IsRoot: root.IsRoot,
 		Parent: root.Parent,
 		Left:   copy(root.Left),

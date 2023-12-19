@@ -105,7 +105,75 @@ $$fx$$
 
 ### Currying
 
-### Left Associativity
+Next we learn that Schönfinkel wants all of his functions to have only one argument. He is of course refering to [currying](https://en.wikipedia.org/wiki/Currying) (also anticipated by Frege). I think Schönfinkel describes them quite well so I will move on to his final thoughts in this section.
+
+### Left Associativity and Implementation
+
+We know finally have a window into what our functions actually look like:
+
+$$fxyz...$$
+$$\text{or}$$
+$$(((fx)y)z)...$$
+
+We can leave the parentheses out if we want, by default they are left-associative. We can also add parentheses to make it clear when expressions should not be left-associative, for example
+
+$$f(xy)z$$
+
+It is here where we can begin our implementation. Because it is clear that our expressions have [terms](https://en.wikipedia.org/wiki/Term_(logic)), we will have to represent them as a [tree structure](https://en.wikipedia.org/wiki/Tree_(data_structure)).
+
+The tree structure representing our expression of functions is peculiar in that:
+1. Each function has only one argument
+1. Functions associate to the left
+1. Our expressions will not have "variables"
+
+Given the expression above, $f(xy)z$, we will represent the tree as the following:
+
+```
+f(xy)z
+------
+
+  /\
+ /\ z
+f /\
+ x  y
+```
+
+Here are a few more trees to get us started:
+```
+x
+-
+
+x
+```
+
+```
+xy
+--
+
+ /\
+x  y
+```
+
+```
+xyz or (xy)z
+------------
+
+  /\
+ /\ z
+x  y
+```
+
+This structure
+1. Allows us to swap in-place expressions at their root after we evaluate them
+1. Is a [binary tree](https://en.wikipedia.org/wiki/Binary_tree) (convenient)
+1. Is what everyone else uses
+
+Our tree implementation is in [tree.go](./tree.go), along with some helper methods. To get from string expression to tree we will need a parser, which can be found in [parse.go](./parse.go) and is tested in [parse_test.go](./parse_test.go). Here is how the parser works:
+
+```go
+unparse(parse("fxyz")) // Returns `fxyz`
+unparse(parse("(((fx)y)z)")) // Returns `fxyz`
+```
 
 ## Section 3
 
