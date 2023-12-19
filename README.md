@@ -10,7 +10,7 @@ See the section-by-section guide to the paper [here](./GUIDE.md).
 - [X] [Introduction by Quine](./GUIDE.md#introduction-by-quine)
 - [X] [Section 1](./GUIDE.md#section-1)
 - [X] [Section 2](./GUIDE.md#section-2)
-- [ ] Section 3
+- [X] [Section 3](./GUIDE.md#section-3)
 - [ ] Section 4
 - [ ] Section 5
 - [ ] Section 6

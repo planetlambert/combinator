@@ -177,6 +177,114 @@ unparse(parse("(((fx)y)z)")) // Returns `fxyz`
 
 ## Section 3
 
+> Now a sequence of particular functions of a very general nature will be introduced.
+
+Up until now we have been talking about functions in the abstract. Schönfinkel now names and defines some functions we will be using in the rest of the paper. It is probably time we give these functions a name - "Combinators". You'll notice that Schönfinkel never uses this name, this term was popularized by Curry. Our type definition for a combinator can be found in [combinator.go](./combinator.go), which is repeated here:
+
+```go
+type Combinator struct {
+    Name       string
+    Arguments  []string
+    Definition string
+}
+```
+
+We can transform an expression involving our combinator into a reduced version using substitution via the following:
+
+```go
+var R = Combinator{
+    Name:       "R", // `R` for "reverse"
+    Arguments:  []string{"x", "y"}, // Takes two arguments
+    Definition: "yz", // And swaps them
+}
+R.Transform("Rxy") // Returns `yx`
+R.Transform("Ra(bc)") // Returns `bca`
+```
+
+### Identity
+
+The first of which is the Identity function (or combinator), `I`. This function returns exactly what it is given, or
+
+$$Ix = x$$
+
+In our implementation we construct `I` like the following:
+
+```go
+var I = Combinator{
+    Name:       "I",
+    Arguments:  []string{"x"},
+    Definition: "x",
+}
+```
+
+and we can use it like this:
+
+```go
+I.Transform("II") // Returns `I`
+```
+
+### Constancy
+
+Next up, the Constancy combinator. Schönfinkel calls this `C`, but in modern times it is refered to as `K`. For this guide and our implementation, I will use `K`. Taking two arguments, it always returns the first:
+
+$$Kxy = x$$
+
+Our implementation is:
+
+```go
+var K = Combinator{
+    Name:       "K",
+    Arguments:  []string{"x", "y"},
+    Definition: "x",
+}
+```
+
+### Interchange
+
+Schönfinkel's explanation of the Interchange combinator, `T`, is quite hard to follow. It is simply:
+
+$$Txyz = Txzy$$
+
+`T` returns `x` (the first argument) with its inputs swapped (interchanged).
+
+```go
+var T = Combinator{
+    Name:       "T",
+    Arguments:  []string{"x", "y", "z"},
+    Definition: "xzy",
+}
+```
+
+### Composition
+
+The Composition combinator, `Z`, is simply a means of shifting parentheses.
+
+$$Zxyz = x(yz)$$
+
+```go
+var Z = Combinator{
+    Name:       "Z",
+    Arguments:  []string{"x", "y", "z"},
+    Definition: "x(yz)",
+}
+```
+
+### Fusion
+
+Finally, the Fusion combinator, `S`, which Schönfinkel says will help us in the following way:
+
+> Clearly, the practical use of the function S will be to enable us to reduce the number of occurrences of a variable - and to some extent also of a particular function - from several to a single one.
+
+$$Sxyz = xz(yz)$$
+
+```go
+var S = Combinator{
+    Name:       "S",
+    Arguments:  []string{"x", "y", "z"},
+    Definition: "xz(yz)",
+}
+```
+
 ## Section 4
 
 ## Section 5
