@@ -285,7 +285,90 @@ var S = Combinator{
 }
 ```
 
+### Transforming
+
+So how does `Transform()` actually work? We parse our statement into a tree, and need an algorithm to do the actual work before we unparse back into a string. We can separate the work out into three separate bits:
+1. Choosing a reduction strategy (which part of the expression to work on first)
+1. Using the strategy, find reducible expressions (called redexes)
+1. When found, rewrite the expression using the combinator definition
+
+You can view the implementation in [reduce.go](./reduce.go) and [reduce_test.go](./reduce_test.go), but here is the algorithm spelled out:
+
+#### Choosing a reduction strategy
+
+There are three orthogonal choices to make when reducing an expression. They are as follows:
+
+1. **Outer vs Inner**: Rewrite the outer expression first, or recurse through the expression tree first?
+   - Example: $\underline{K(Ix)(Ix)}$ vs $\underline{K}(\underline{Ix})(\underline{Ix})$
+2. **Left vs Right**: When recursing, choose the left or right subtree first?
+   - Example: $(\underline{Ix})(Ix)$ vs $(Ix)(\underline{Ix})$
+3. **Normal vs Applicative**: Reduce arguments before applying the function (combinator)?
+
+Each combination of these choices should give us the same end result (via the [Church-Rosser theorum](https://en.wikipedia.org/wiki/Church%E2%80%93Rosser_theorem)), although some combinations may not be guaranteed to terminate.
+
+For our implementation we will stick with *outermost leftmost normal-order* reduction.
+
+#### Finding a redex
+
+Each time we are ready to reduce a subtree, we first need to see if that particular subtree is capable of reducing (is it a **red**uceable **ex**pression)? To do this, we need to find the left-most leaf of the subtree, and see if it is our combinator. If it is, and there are enough arguments, we can perform the rewrite. Here are some examples:
+
+Example 1 - The `K` combinator ($Kxy = x$) needs only 2 arguments, so the following tree can be reduced
+```
+Kabc
+----
+   /\
+  /\ c (3'rd arg)
+ /\ b (2'nd arg)
+K  a (1'st arg)
+```
+
+Example 1 - The following `K` combinator does not have enough arguments and cannot be reduced
+```
+Ka
+--
+ /\
+K  a (1'st arg)
+```
+
+#### Perform the rewrite
+
+Finally we can actually rewrite our tree using the combinator definition. To follow our Example 1 above:
+
+```
+Kabc             ac
+----             --
+   /\             /\
+  /\ c    ->     a  c
+ /\ b
+K  a
+```
+
 ## Section 4
+
+### Basis
+
+So Schönfinkel has defined 5 combinators, but tells us in this section that we can actually derive some from the others (like the Sheffer stroke). Schönfinkel says that we actually only need `S` and `K`! In modern times we have actually not been able to do much better than just `S` and `K`. This is still the most common basis used in modern Combinatory Logic ([SKI combinator calculus](https://en.wikipedia.org/wiki/SKI_combinator_calculus)).
+
+This brings us to the concept of a **basis**, which is the set of combinators one wants to use in their expressions. There are a few common bases:
+- [**SKI**](https://en.wikipedia.org/wiki/SKI_combinator_calculus) - `S`, `K`, and `I`
+- [**SK**](https://en.wikipedia.org/wiki/Combinatory_logic#Completeness_of_the_S-K_basis) - Just `S` and `K`
+- [**BCKW**](https://en.wikipedia.org/wiki/B,_C,_K,_W_system) - Used by Curry, uses combinators `B` (Schönfinkel's `Z`), `C` (Schönfinkel's `T`), `K`, and `W` ($Wxy = xyy$)
+- [**Iota**](https://en.wikipedia.org/wiki/Iota_and_Jot) - Just one combinator, $ιx = xSK$. More discussion on this in [section 6](./combinator.go)
+
+You will see our implementaton of these commen bases in [combinator.go](./combinator.go) and [combinator_test.go](./combinator_test.go). You can use them as follows:
+
+```go
+// Create your own basis
+schonfinkel := Basis{I, K, T, Z, S}
+schonfinkel.Transform("S(ZZS)(KK)xyz") // Returns `xzy`
+
+// Use a predefined basis
+SK.Transform("SKKx") // Returns `x`
+```
+
+### The SK Basis
+
+TODO
 
 ## Section 5
 
