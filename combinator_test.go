@@ -1,6 +1,27 @@
 package combinator
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
+
+func TestSchonfinkel(t *testing.T) {
+	tests := map[string]string{
+		"SKKx":          "Ix",
+		"SKyx":          "Ix",
+		"S(KS)Kxyz":     "Zxyz",
+		"S(ZZS)(KK)xyz": "Txyz",
+	}
+	for statement1, statement2 := range tests {
+		t.Run(fmt.Sprintf("%s = %s", statement1, statement2), func(t *testing.T) {
+			result1, _ := Schonfinkel.Transform(statement1)
+			result2, _ := Schonfinkel.Transform(statement2)
+			if result1 != result2 {
+				t.Errorf("combinators %s and %s not equal, got %s and %s", statement1, statement2, result1, result2)
+			}
+		})
+	}
+}
 
 func TestSKI(t *testing.T) {
 	tests := map[string]string{

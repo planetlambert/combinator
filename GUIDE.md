@@ -368,7 +368,13 @@ SK.Transform("SKKx") // Returns `x`
 
 ### The SK Basis
 
-TODO
+Schönfinkel now derives `I`, `Z`, and `T` in terms of `S` and `K`. I'll repeat them here:
+
+- $I = SKK$
+- $Z = S(KS)K$
+- $T = S(ZZS)(KK)$ (using the definition for `Z` above)
+
+These can be found in `TestSchonfinkel` in [combinator_test.go](./combinator_test.go)
 
 ## Section 5
 

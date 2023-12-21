@@ -50,6 +50,9 @@ var (
 		Arguments:  []string{"x", "y", "z"},
 		Definition: "xz(yz)",
 	}
+
+	// All of Schönfinkel's defined combinators
+	Schonfinkel = Basis{I, K, T, Z, S}
 )
 
 // SK and SKI (https://en.wikipedia.org/wiki/SKI_combinator_calculus)

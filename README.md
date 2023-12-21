@@ -11,7 +11,7 @@ See the section-by-section guide to the paper [here](./GUIDE.md).
 - [X] [Section 1](./GUIDE.md#section-1)
 - [X] [Section 2](./GUIDE.md#section-2)
 - [X] [Section 3](./GUIDE.md#section-3)
-- [ ] Section 4
+- [X] [Section 4](./GUIDE.md#section-4)
 - [ ] Section 5
 - [ ] Section 6
 
