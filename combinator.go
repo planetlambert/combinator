@@ -144,6 +144,11 @@ func (b Basis) Transform(statement string) (string, error) {
 	return unparse(reducedTree), nil
 }
 
+// Adds an additional Combinator to the Basis
+func (b Basis) With(combinator Combinator) Basis {
+	return append(b, combinator)
+}
+
 // Transforms the statement using the Combinator `c`
 func (c Combinator) Transform(statement string) (string, error) {
 	if err := isWellDefined(statement); err != nil {
