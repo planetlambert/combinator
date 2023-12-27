@@ -84,7 +84,7 @@ var (
 	BCKW = Basis{B, C, K, W}
 )
 
-// Iota
+// Iota (https://en.wikipedia.org/wiki/Iota_and_Jot)
 var (
 	Iota = Basis{
 		S,
@@ -97,6 +97,41 @@ var (
 			Definition: "xSK",
 		},
 	}
+)
+
+// Church Encoding (https://en.wikipedia.org/wiki/Church_encoding)
+var (
+	Zero = Combinator{
+		Name:       "0",
+		Arguments:  []string{"f", "x"},
+		Definition: "x",
+	}
+
+	Succ = Combinator{
+		Name:       "S",
+		Arguments:  []string{"n", "f", "x"},
+		Definition: "f(nfx)",
+	}
+
+	Plus = Combinator{
+		Name:       "P",
+		Arguments:  []string{"m", "n", "f", "x"},
+		Definition: "mf(nfx)",
+	}
+
+	Mult = Combinator{
+		Name:       "M",
+		Arguments:  []string{"m", "n", "f", "x"},
+		Definition: "m(nf)x",
+	}
+
+	Exp = Combinator{
+		Name:       "E",
+		Arguments:  []string{"m", "n", "f", "x"},
+		Definition: "nmfx",
+	}
+
+	Church = Basis{Zero, Succ, Plus, Mult, Exp}
 )
 
 // Transforms the statement using the Basis `b`

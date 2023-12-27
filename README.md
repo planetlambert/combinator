@@ -12,7 +12,7 @@ See the section-by-section guide to the paper [here](./GUIDE.md).
 - [X] [Section 2](./GUIDE.md#section-2)
 - [X] [Section 3](./GUIDE.md#section-3)
 - [X] [Section 4](./GUIDE.md#section-4)
-- [ ] Section 5
+- [X] [Section 5](./GUIDE.md#section-5)
 - [ ] Section 6
 
 ## Usage

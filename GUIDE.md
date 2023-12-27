@@ -77,7 +77,7 @@ $$\overline{a} \vee \overline{b} \\;\\;\\; \text{and} \\;\\;\\; \overline{a \\& 
 
 both of which are the same (using [De Morgan's theorem](https://en.wikipedia.org/wiki/De_Morgan%27s_laws)). Schönfinkel adopts the $|$ symbol as his operator (so $a|b$), and derives the five former fundamental connectives.
 
-### Universally Quantified Sheffer Stroke
+### Universally quantified Sheffer stroke
 
 Schönfinkel now wants to move on from [propositional logic](https://en.wikipedia.org/wiki/Propositional_calculus) to [first-order logic](https://en.wikipedia.org/wiki/First-order_logic) to see if he can modify his fundamental connective to include [quantification](https://en.wikipedia.org/wiki/Quantifier_(logic)). This connective he defines as
 
@@ -377,6 +377,44 @@ Schönfinkel now derives `I`, `Z`, and `T` in terms of `S` and `K`. I'll repeat 
 These can be found in `TestSchonfinkel` in [combinator_test.go](./combinator_test.go)
 
 ## Section 5
+
+This section is by far the most difficult in the paper. It took some time digesting this, alongside reading the ['1.2 The operators "nextand" and "U"'](https://plato.stanford.edu/entries/logic-combinatory/#OperNextU) section of [Stanford's Plato Combinatory Logic article](https://plato.stanford.edu/entries/logic-combinatory/).
+
+Schönfinkel's aim in this section is twofold:
+1. To be able to describe any first or second order logic formula in terms of just `K`, `S`, and `U`.
+1. To eliminate bound variables (like $x$ below)
+
+Of course, `U` is our universally quantified Sheffer stroke from section 1:
+
+$$f(x) |^x g(x)$$
+
+Which he defines in his new calculus as:
+
+$$Ufg = fx |^x gx$$
+
+The definition of this combinator is obviously different from the ones described in the previous section, mainly:
+
+- The combinator definition is not in the form of a tree rewrite
+- A bound variable $x$ has snuck its way into the combinator definition
+
+So it seems that Schönfinkel is more or less going to "encode" first-order logic into his own logic system. This definitely does have merit (no bound variables, etc.), but I do get a feeling that he is just packaging them away into definitions. 
+
+Lets give a simple example to understand what Schönfinkel is getting at:
+
+| | |
+|-|-|
+| English | "For every number, that number can't be both even and odd" |
+| First-order logic                | $(x)\overline{E(x) \\& O(x)}$                          |
+| First-order logic (only Sheffer) | $Ex\|^xOx$ |
+| Combinatory Logic                | $UEO$ |
+
+So the bound $x$ is eliminated, and we have an equation with only `U`, and the other functions in the domain we are dealing with. `E` and `O` hold information about their domain of discourse, so no need to keep the $x$ around.
+
+Schönfinkel now provides us with the methodology of how to move the the arguments of `U` around in particular cases using our existing combinators `K` and `S` (and those combinators that can be derived from `K` and `S`).
+
+As far as our implementation goes, we can treat `U` as a constant as it has no meaning that is compatible with our tree definition. Maybe some day I will come back and implement the conversion of first-order logic to combinatory logic and vice versa.
+
+The modern-day interpretation of this section is probably that combinatory logic is useful as an encoding mechanism to get as little syntax overhead as possible (and first-order logic is one such example). I find systems that build on top of the system (like the [Church encoding](https://en.wikipedia.org/wiki/Church_encoding)) much more interesting. Church encoding can be found in [combinator.go](./church.go) and [combinator_test.go](./church_test.go).
 
 ## Section 6
 

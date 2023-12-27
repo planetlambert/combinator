@@ -50,7 +50,27 @@ func TestIota(t *testing.T) {
 		t.Run(statement, func(t *testing.T) {
 			actualResult, _ := Iota.Transform(statement)
 			if expectedResult != actualResult {
-				t.Errorf("transformed SKI statement %s incorrectly, expected %s but got %s", statement, expectedResult, actualResult)
+				t.Errorf("transformed Iota statement %s incorrectly, expected %s but got %s", statement, expectedResult, actualResult)
+			}
+		})
+	}
+}
+
+func TestChurch(t *testing.T) {
+	tests := map[string]string{
+		"0fx":                      "x",
+		"S(0)fx":                   "fx",
+		"S(S(0))fx":                "f(fx)",
+		"P(0)(0)fx":                "x",
+		"P(S(S(S(0))))(S(S(0)))fx": "f(f(f(f(fx))))",
+		"M(S(S(S(0))))(S(S(0)))fx": "f(f(f(f(f(fx)))))",
+		"E(S(S(S(0))))(S(S(0)))fx": "f(f(f(f(f(f(f(f(fx))))))))",
+	}
+	for statement, expectedResult := range tests {
+		t.Run(statement, func(t *testing.T) {
+			actualResult, _ := Church.Transform(statement)
+			if expectedResult != actualResult {
+				t.Errorf("transformed Church statement %s incorrectly, expected %s but got %s", statement, expectedResult, actualResult)
 			}
 		})
 	}
