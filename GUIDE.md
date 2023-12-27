@@ -420,7 +420,7 @@ The modern-day interpretation of this section is probably that combinatory logic
 
 ### `J` and Iota
 
-In the final section, we see Schönfinkel attempt to reduce our combinator basis to just one combinator - `J`. `J` unfortunately has a definition that is incompatible with the previous explanation of combinators - `J` is made up of multiple definitions depending on its argument. This is an additional notion that is not quite in the spirit of the rest of the paper.
+In the final section, we see Schönfinkel attempt to reduce our combinator basis to just one combinator - `J`. `J` unfortunately has a definition that is incompatible with the previous explanation of combinators - `J` is made up of multiple sub-definitions depending on its argument. This is an additional notion that is not quite in the spirit of the rest of the paper.
 
 In modern times we have [iota](https://en.wikipedia.org/wiki/Iota_and_Jot), which very much accomplishes what Schönfinkel was trying to get at. Iota is the combinator `ι` (which for the remainder of this guide and implementation will be just `i` for ease of use). The iota combinator is defined as follows:
 
@@ -429,7 +429,9 @@ $$ix = xSK$$
 so that
 
 $$ii = I$$
+
 $$i(i(ii)) = K$$
+
 $$i(i(i(ii))) = S$$
 
 I will note that Iota is technically "improper" (see [here](https://news.ycombinator.com/item?id=25335175) for discussion) as it is defined from other combinators. It is still quite amazing that we have a language with one character that can encompass all of computation.
@@ -456,7 +458,7 @@ I think a good place to leave off is an exposition to [Chris Barker](https://en.
 
 In the Iota language, `1` represents the iota combinator, and `0` represents the Polish operator. This Polish operator (described in the introduction by Quine) isn't actually representable as a combinator, and is a construct that exists outside of our language.
 
-The only problem with Iota is that not every string of `1`'s and `0`'s is valid, so Barker created the language [Jot](https://esolangs.org/wiki/Jot), which is extremely similar.
+The only problem with Iota is that not every string of `1`'s and `0`'s is valid, so Barker created the language [Jot](https://esolangs.org/wiki/Jot), which is accomplishes that goal.
 
 ## Overall Thoughts
 
