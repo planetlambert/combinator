@@ -8,17 +8,17 @@ import (
 )
 
 // Parses a statement into a tree
-func parse(statement string) *treeNode {
+func parse(statement string) *Tree {
 	// Returns a single-node tree if there is only one character
 	if utf8.RuneCountInString(statement) == 1 {
-		return &treeNode{
+		return &Tree{
 			IsRoot: true,
 			IsLeaf: true,
 			Leaf:   statement,
 		}
 	}
 
-	var root *treeNode
+	var root *Tree
 	for _, subStatement := range getSubStatements(statement) {
 		// Recursively parse each substatement
 		subTree := parse(subStatement)
@@ -28,7 +28,7 @@ func parse(statement string) *treeNode {
 		if root == nil {
 			root = subTree
 		} else {
-			root = &treeNode{
+			root = &Tree{
 				Left:  root,
 				Right: subTree,
 			}
@@ -78,7 +78,7 @@ func getSubStatements(statement string) []string {
 }
 
 // Unparses a tree into a string statement
-func unparse(root *treeNode) string {
+func unparse(root *Tree) string {
 	var statement strings.Builder
 
 	// Start with the left-most leaf

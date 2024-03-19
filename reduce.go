@@ -5,7 +5,7 @@ import (
 )
 
 // Reduces the tree `tree` using basis `b`
-func reduce(root *treeNode, b Basis, applicativeOrder bool) *treeNode {
+func reduce(root *Tree, b Basis, applicativeOrder bool) *Tree {
 	if root.IsLeaf {
 		return root
 	}
@@ -23,7 +23,7 @@ func reduce(root *treeNode, b Basis, applicativeOrder bool) *treeNode {
 	return newTree
 }
 
-func rewrite(root *treeNode, b Basis, applicativeOrder bool) *treeNode {
+func rewrite(root *Tree, b Basis, applicativeOrder bool) *Tree {
 	// Rewrite attempts use the left-most leaf of this subtree
 	leftMostLeaf := getLeftMostLeaf(root)
 
@@ -78,7 +78,7 @@ func rewrite(root *treeNode, b Basis, applicativeOrder bool) *treeNode {
 }
 
 // Recursively pplies the arguments in `argumentNodes` to the Combinator.
-func apply(combinator Combinator, argumentNodes []*treeNode, combinatorRoot *treeNode) *treeNode {
+func apply(combinator Combinator, argumentNodes []*Tree, combinatorRoot *Tree) *Tree {
 	if combinatorRoot.IsLeaf {
 		// Find the argument the combinator definition is referring to
 		index := slices.Index(combinator.Arguments, combinatorRoot.Leaf)

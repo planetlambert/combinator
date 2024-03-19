@@ -159,6 +159,27 @@ func (c Combinator) Transform(statement string) (string, error) {
 	return unparse(reducedTree), nil
 }
 
+// Returns whether the statement is well defined or not
+func WellDefined(statement string) (bool, error) {
+	err := isWellDefined(statement)
+	return err == nil, err
+}
+
+// Parses the statement into a Tree
+func Parse(statement string) *Tree {
+	return parse(statement)
+}
+
+// Reduces the Tree using the Basis `b`
+func (b Basis) Reduce(tree *Tree) *Tree {
+	return reduce(tree, b, false)
+}
+
+// Joins the two trees together under a new root
+func Join(a *Tree, b *Tree) *Tree {
+	return join(a, b)
+}
+
 // Attempts to find a Combinator named `name` in the Basis `b`
 func findCombinator(name string, b Basis) (Combinator, bool) {
 	index := slices.IndexFunc(b, func(c Combinator) bool {

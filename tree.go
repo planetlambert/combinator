@@ -1,17 +1,17 @@
 package combinator
 
 // A simple binary tree
-type treeNode struct {
-	Left   *treeNode
-	Right  *treeNode
-	Parent *treeNode
+type Tree struct {
+	Left   *Tree
+	Right  *Tree
+	Parent *Tree
 	IsLeaf bool
 	IsRoot bool
 	Leaf   string // If `IsLeaf`, the leaf's content
 }
 
-// Returns the tree's root given any treeNode
-func getRoot(tree *treeNode) *treeNode {
+// Returns the tree's root given any tree
+func getRoot(tree *Tree) *Tree {
 	if tree.IsRoot {
 		return tree
 	}
@@ -19,7 +19,7 @@ func getRoot(tree *treeNode) *treeNode {
 }
 
 // Returns the left-most leaf from the current node
-func getLeftMostLeaf(tree *treeNode) *treeNode {
+func getLeftMostLeaf(tree *Tree) *Tree {
 	if tree.IsLeaf {
 		return tree
 	}
@@ -27,7 +27,7 @@ func getLeftMostLeaf(tree *treeNode) *treeNode {
 }
 
 // Return's the n'th parent from the current node
-func getNthParent(tree *treeNode, n int) *treeNode {
+func getNthParent(tree *Tree, n int) *Tree {
 	if tree.IsRoot || n == 0 {
 		return tree
 	}
@@ -35,7 +35,7 @@ func getNthParent(tree *treeNode, n int) *treeNode {
 }
 
 // Returns the number of nodes to get to the root from the current node
-func numNodesToRoot(descendent *treeNode, root *treeNode) int {
+func numNodesToRoot(descendent *Tree, root *Tree) int {
 	if descendent == root {
 		return 0
 	}
@@ -46,8 +46,8 @@ func numNodesToRoot(descendent *treeNode, root *treeNode) int {
 // there must be some correct technical name for them). The first "Right Sibling"
 // of a node is it's parent's right child. The second "Right Sibling" is the
 // node's grandparent's right child, and so on...
-func getNRightSiblings(descendent *treeNode, n int) []*treeNode {
-	siblings := []*treeNode{}
+func getNRightSiblings(descendent *Tree, n int) []*Tree {
+	siblings := []*Tree{}
 	current := descendent
 	for i := 0; i < n; i++ {
 		current = current.Parent
@@ -57,9 +57,9 @@ func getNRightSiblings(descendent *treeNode, n int) []*treeNode {
 }
 
 // Recursively copies an entire subtree
-func copy(root *treeNode) *treeNode {
+func copy(root *Tree) *Tree {
 	if root.IsLeaf {
-		return &treeNode{
+		return &Tree{
 			IsRoot: root.IsRoot,
 			Parent: root.Parent,
 			IsLeaf: root.IsLeaf,
@@ -67,7 +67,7 @@ func copy(root *treeNode) *treeNode {
 		}
 	}
 
-	node := &treeNode{
+	node := &Tree{
 		IsRoot: root.IsRoot,
 		Parent: root.Parent,
 		Left:   copy(root.Left),
@@ -79,4 +79,17 @@ func copy(root *treeNode) *treeNode {
 	node.Left.Parent = node
 	node.Right.Parent = node
 	return node
+}
+
+func join(a *Tree, b *Tree) *Tree {
+	firstRootCopy := copy(a)
+	secondRootCopy := copy(b)
+	firstRootCopy.IsRoot = false
+	secondRootCopy.IsRoot = false
+
+	return &Tree{
+		Left:   firstRootCopy,
+		Right:  secondRootCopy,
+		IsRoot: true,
+	}
 }
