@@ -1,6 +1,7 @@
 package combinator
 
 import (
+	"context"
 	"slices"
 )
 
@@ -135,12 +136,15 @@ var (
 )
 
 // Transforms the statement using the Basis `b`
-func (b Basis) Transform(statement string) (string, error) {
+func (b Basis) Transform(ctx context.Context, statement string) (string, error) {
 	if err := isWellDefined(statement); err != nil {
 		return "", err
 	}
 	tree := parse(statement)
-	reducedTree := reduce(tree, b, false)
+	reducedTree, canceled := reduce(ctx, tree, b, false)
+	if canceled {
+		return "", ctx.Err()
+	}
 	return unparse(reducedTree), nil
 }
 
@@ -150,12 +154,15 @@ func (b Basis) With(combinator Combinator) Basis {
 }
 
 // Transforms the statement using the Combinator `c`
-func (c Combinator) Transform(statement string) (string, error) {
+func (c Combinator) Transform(ctx context.Context, statement string) (string, error) {
 	if err := isWellDefined(statement); err != nil {
 		return "", err
 	}
 	tree := parse(statement)
-	reducedTree := reduce(tree, Basis{c}, false)
+	reducedTree, canceled := reduce(ctx, tree, Basis{c}, false)
+	if canceled {
+		return "", ctx.Err()
+	}
 	return unparse(reducedTree), nil
 }
 
@@ -171,8 +178,12 @@ func Parse(statement string) *Tree {
 }
 
 // Reduces the Tree using the Basis `b`
-func (b Basis) Reduce(tree *Tree) *Tree {
-	return reduce(tree, b, false)
+func (b Basis) Reduce(ctx context.Context, tree *Tree) (*Tree, error) {
+	reduced, canceled := reduce(ctx, tree, b, false)
+	if canceled {
+		return nil, ctx.Err()
+	}
+	return reduced, nil
 }
 
 // Joins the two trees together under a new root

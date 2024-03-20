@@ -23,14 +23,17 @@ go get github.com/planetlambert/combinator@latest
 
 ```go
 import (
+    "context"
     "fmt"
 
     "github.com/planetlambert/combinator"
 )
 
 func main() {
+    ctx := context.Background()
+
     // Use a built-in basis (SKI in this example)
-    transformedStatement, _ := combinator.SKI.Transform("S(K(SI))Kab")
+    transformedStatement, _ := combinator.SKI.Transform(ctx, "S(K(SI))Kab")
 
     // Prints "ba" - S(K(SI))K is the "reversal" combinator
     fmt.Println(transformedStatement)

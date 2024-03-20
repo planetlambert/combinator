@@ -1,6 +1,7 @@
 package combinator
 
 import (
+	"context"
 	"fmt"
 	"testing"
 )
@@ -14,8 +15,8 @@ func TestSchonfinkel(t *testing.T) {
 	}
 	for statement1, statement2 := range tests {
 		t.Run(fmt.Sprintf("%s = %s", statement1, statement2), func(t *testing.T) {
-			result1, _ := Schonfinkel.Transform(statement1)
-			result2, _ := Schonfinkel.Transform(statement2)
+			result1, _ := Schonfinkel.Transform(context.Background(), statement1)
+			result2, _ := Schonfinkel.Transform(context.Background(), statement2)
 			if result1 != result2 {
 				t.Errorf("combinators %s and %s not equal, got %s and %s", statement1, statement2, result1, result2)
 			}
@@ -32,7 +33,7 @@ func TestSKI(t *testing.T) {
 	}
 	for statement, expectedResult := range tests {
 		t.Run(statement, func(t *testing.T) {
-			actualResult, _ := SKI.Transform(statement)
+			actualResult, _ := SKI.Transform(context.Background(), statement)
 			if expectedResult != actualResult {
 				t.Errorf("transformed SKI statement %s incorrectly, expected %s but got %s", statement, expectedResult, actualResult)
 			}
@@ -48,7 +49,7 @@ func TestIota(t *testing.T) {
 	}
 	for statement, expectedResult := range tests {
 		t.Run(statement, func(t *testing.T) {
-			actualResult, _ := Iota.Transform(statement)
+			actualResult, _ := Iota.Transform(context.Background(), statement)
 			if expectedResult != actualResult {
 				t.Errorf("transformed Iota statement %s incorrectly, expected %s but got %s", statement, expectedResult, actualResult)
 			}
@@ -68,7 +69,7 @@ func TestChurch(t *testing.T) {
 	}
 	for statement, expectedResult := range tests {
 		t.Run(statement, func(t *testing.T) {
-			actualResult, _ := Church.Transform(statement)
+			actualResult, _ := Church.Transform(context.Background(), statement)
 			if expectedResult != actualResult {
 				t.Errorf("transformed Church statement %s incorrectly, expected %s but got %s", statement, expectedResult, actualResult)
 			}

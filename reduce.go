@@ -1,29 +1,43 @@
 package combinator
 
 import (
+	"context"
 	"slices"
 )
 
 // Reduces the tree `tree` using basis `b`
-func reduce(root *Tree, b Basis, applicativeOrder bool) *Tree {
+func reduce(ctx context.Context, root *Tree, b Basis, applicativeOrder bool) (*Tree, bool) {
 	if root.IsLeaf {
-		return root
+		return root, false
 	}
 
 	// Our algorithm is outer-first (we attempt to rewrite before recursing
 	// into the left and right child)
-	newTree := rewrite(root, b, applicativeOrder)
+	newTree, canceled := rewrite(ctx, root, b, applicativeOrder)
+	if canceled {
+		return nil, true
+	}
 	if newTree.IsLeaf {
-		return newTree
+		return newTree, false
 	}
 
 	// Out algorithm is also left-first (we recurse the left subtree first)
-	newTree.Left = reduce(newTree.Left, b, applicativeOrder)
-	newTree.Right = reduce(newTree.Right, b, applicativeOrder)
-	return newTree
+	newTreeLeft, canceled := reduce(ctx, newTree.Left, b, applicativeOrder)
+	if canceled {
+		return nil, true
+	}
+	newTree.Left = newTreeLeft
+
+	newTreeRight, canceled := reduce(ctx, newTree.Right, b, applicativeOrder)
+	newTree.Right = newTreeRight
+	if canceled {
+		return nil, true
+	}
+
+	return newTree, false
 }
 
-func rewrite(root *Tree, b Basis, applicativeOrder bool) *Tree {
+func rewrite(ctx context.Context, root *Tree, b Basis, applicativeOrder bool) (*Tree, bool) {
 	// Rewrite attempts use the left-most leaf of this subtree
 	leftMostLeaf := getLeftMostLeaf(root)
 
@@ -50,7 +64,11 @@ func rewrite(root *Tree, b Basis, applicativeOrder bool) *Tree {
 		// Applicative order is when we reduce our arguments before applying our combinator
 		if applicativeOrder {
 			for i := 0; i < len(argumentNodes); i++ {
-				argumentNodes[i] = reduce(argumentNodes[i], b, applicativeOrder)
+				reducedArgumentNode, canceled := reduce(ctx, argumentNodes[i], b, applicativeOrder)
+				if canceled {
+					return nil, true
+				}
+				argumentNodes[i] = reducedArgumentNode
 			}
 		}
 
@@ -72,9 +90,9 @@ func rewrite(root *Tree, b Basis, applicativeOrder bool) *Tree {
 		originalRoot := getNthParent(combinatorRoot, numNodesToRoot-numArgs)
 
 		// Recursively rewrite
-		return rewrite(originalRoot, b, applicativeOrder)
+		return rewrite(ctx, originalRoot, b, applicativeOrder)
 	}
-	return root
+	return root, false
 }
 
 // Recursively pplies the arguments in `argumentNodes` to the Combinator.
