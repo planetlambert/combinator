@@ -191,6 +191,11 @@ func Join(a *Tree, b *Tree) *Tree {
 	return join(a, b)
 }
 
+// Produces a copy of the tree
+func Copy(t *Tree) *Tree {
+	return copy(t)
+}
+
 // Attempts to find a Combinator named `name` in the Basis `b`
 func findCombinator(name string, b Basis) (Combinator, bool) {
 	index := slices.IndexFunc(b, func(c Combinator) bool {
