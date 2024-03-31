@@ -177,6 +177,11 @@ func Parse(statement string) *Tree {
 	return parse(statement)
 }
 
+// Parses the statement into a Tree
+func Unparse(tree *Tree) string {
+	return unparse(tree)
+}
+
 // Reduces the Tree using the Basis `b`
 func (b Basis) Reduce(ctx context.Context, tree *Tree) (*Tree, error) {
 	reduced, canceled := reduce(ctx, tree, b, false)
