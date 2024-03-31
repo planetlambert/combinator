@@ -51,7 +51,7 @@ func rewrite(ctx context.Context, root *Tree, b Basis, applicativeOrder bool) (*
 	numNodesToRoot := numNodesToRoot(leftMostLeaf, root)
 
 	// If we found a combinator, and have enough arguments, attempt a rewrite
-	if ok && numArgs <= numNodesToRoot {
+	if ok && numArgs > 0 && numArgs <= numNodesToRoot {
 		// Construct new tree based off of combinator
 		combinatorRoot := parse(combinator.Definition)
 

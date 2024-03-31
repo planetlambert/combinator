@@ -9,6 +9,10 @@ import (
 
 // Parses a statement into a tree
 func parse(statement string) *Tree {
+	if len(statement) == 0 {
+		return nil
+	}
+
 	// Returns a single-node tree if there is only one character
 	if utf8.RuneCountInString(statement) == 1 {
 		return &Tree{
