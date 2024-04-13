@@ -191,9 +191,9 @@ func (b Basis) Reduce(ctx context.Context, tree *Tree) (*Tree, error) {
 	return reduced, nil
 }
 
-// Joins the two trees together under a new root
-func Join(a *Tree, b *Tree) *Tree {
-	return join(a, b)
+// Joins the trees together under a new root
+func Join(trees []*Tree) *Tree {
+	return join(trees)
 }
 
 // Produces a copy of the tree

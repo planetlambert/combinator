@@ -81,15 +81,27 @@ func copy(root *Tree) *Tree {
 	return node
 }
 
-func join(a *Tree, b *Tree) *Tree {
-	firstRootCopy := copy(a)
-	secondRootCopy := copy(b)
+func join(trees []*Tree) *Tree {
+	if len(trees) == 0 {
+		return nil
+	}
+
+	if len(trees) == 1 {
+		return copy(trees[0])
+	}
+
+	firstRootCopy := copy(trees[0])
+	secondRootCopy := copy(trees[1])
 	firstRootCopy.IsRoot = false
 	secondRootCopy.IsRoot = false
 
-	return &Tree{
-		Left:   firstRootCopy,
-		Right:  secondRootCopy,
-		IsRoot: true,
+	newSlice := []*Tree{
+		{
+			Left:   firstRootCopy,
+			Right:  secondRootCopy,
+			IsRoot: true,
+		},
 	}
+	newSlice = append(newSlice, trees[2:]...)
+	return join(newSlice)
 }
