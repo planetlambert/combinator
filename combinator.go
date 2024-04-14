@@ -77,7 +77,7 @@ var (
 	}
 
 	W = Combinator{
-		Name:       "C",
+		Name:       "W",
 		Arguments:  []string{"x", "y"},
 		Definition: "xyy",
 	}
