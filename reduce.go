@@ -7,6 +7,10 @@ import (
 
 // Reduces the tree `tree` using basis `b`
 func reduce(ctx context.Context, root *Tree, b Basis, applicativeOrder bool) (*Tree, bool) {
+	if ctx.Err() != nil {
+		return nil, true
+	}
+
 	if root.IsLeaf {
 		return root, false
 	}
@@ -38,6 +42,10 @@ func reduce(ctx context.Context, root *Tree, b Basis, applicativeOrder bool) (*T
 }
 
 func rewrite(ctx context.Context, root *Tree, b Basis, applicativeOrder bool) (*Tree, bool) {
+	if ctx.Err() != nil {
+		return nil, true
+	}
+
 	// Rewrite attempts use the left-most leaf of this subtree
 	leftMostLeaf := getLeftMostLeaf(root)
 

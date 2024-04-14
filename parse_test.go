@@ -44,6 +44,7 @@ func TestWellDefined(t *testing.T) {
 		"((x))":    true,
 		"(x(x))":   true,
 		"":         false,
+		"()":       false,
 		"x()":      false,
 		"(()":      false,
 		")(":       false,

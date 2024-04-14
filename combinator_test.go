@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 )
 
 func TestSchonfinkel(t *testing.T) {
@@ -74,5 +75,17 @@ func TestChurch(t *testing.T) {
 				t.Errorf("transformed Church statement %s incorrectly, expected %s but got %s", statement, expectedResult, actualResult)
 			}
 		})
+	}
+}
+
+func TestContext(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	_, err := BCKW.Transform(ctx, "WWW")
+	if err == nil {
+		t.Error("expected error")
+	}
+	cancel()
+	if err.Error() != context.DeadlineExceeded.Error() {
+		t.Errorf("expected error %s", context.DeadlineExceeded.Error())
 	}
 }
