@@ -17,7 +17,7 @@ func reduce(ctx context.Context, root *Tree, b Basis, applicativeOrder bool, fra
 		return nil, errors.New("loop detected")
 	}
 
-	if root.IsLeaf {
+	if root.IsLeaf && !root.IsRoot {
 		return root, nil
 	}
 
@@ -68,7 +68,7 @@ func rewrite(ctx context.Context, root *Tree, b Basis, applicativeOrder bool, fr
 	numNodesToRoot := numNodesToRoot(leftMostLeaf, root)
 
 	// If we found a combinator, and have enough arguments, attempt a rewrite
-	if ok && numArgs > 0 && numArgs <= numNodesToRoot {
+	if ok && numArgs <= numNodesToRoot {
 		// Construct new tree based off of combinator
 		combinatorRoot := parse(combinator.Definition)
 
@@ -76,7 +76,12 @@ func rewrite(ctx context.Context, root *Tree, b Basis, applicativeOrder bool, fr
 		argumentNodes := getNRightSiblings(leftMostLeaf, numArgs)
 
 		// Store a reference to the root of the subtree we are rewriting
-		rewriteRoot := argumentNodes[len(argumentNodes)-1].Parent
+		var rewriteRoot *Tree
+		if len(argumentNodes) > 0 {
+			rewriteRoot = argumentNodes[len(argumentNodes)-1].Parent
+		} else {
+			rewriteRoot = leftMostLeaf
+		}
 
 		// Applicative order is when we reduce our arguments before applying our combinator
 		if applicativeOrder {

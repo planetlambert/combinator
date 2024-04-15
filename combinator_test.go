@@ -99,3 +99,25 @@ func TestLoopDetection(t *testing.T) {
 		t.Errorf("expected error loop detected, got %s", err.Error())
 	}
 }
+
+func TestFullyImproperCombinators(t *testing.T) {
+	tests := map[string]string{
+		//"Q":  "S",
+		"QQ": "SQ",
+	}
+	for statement, expectedResult := range tests {
+		t.Run(statement, func(t *testing.T) {
+			actualResult, err := SK.With(Combinator{
+				Name:       "Q",
+				Arguments:  []string{},
+				Definition: "S",
+			}).Transform(context.Background(), statement)
+			if err != nil {
+				t.Error(err)
+			}
+			if actualResult != expectedResult {
+				t.Errorf("expected %s as a result, got %s", expectedResult, actualResult)
+			}
+		})
+	}
+}
