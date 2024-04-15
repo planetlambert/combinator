@@ -86,6 +86,6 @@ func TestContext(t *testing.T) {
 	}
 	cancel()
 	if err.Error() != context.DeadlineExceeded.Error() {
-		t.Errorf("expected error %s", context.DeadlineExceeded.Error())
+		t.Errorf("expected error %s, got %s", context.DeadlineExceeded.Error(), err.Error())
 	}
 }

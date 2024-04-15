@@ -31,9 +31,9 @@ func TestReduce(t *testing.T) {
 	for statement, expectedResult := range tests {
 		t.Run(statement, func(t *testing.T) {
 			tree := parse(statement)
-			reducedNormal, _ := reduce(context.Background(), tree, basis, false)
+			reducedNormal, _ := reduce(context.Background(), tree, basis, false, 0)
 			actualResultNormal := unparse(reducedNormal)
-			reducedApplicative, _ := reduce(context.Background(), tree, basis, true)
+			reducedApplicative, _ := reduce(context.Background(), tree, basis, true, 0)
 			actualResultApplicative := unparse(reducedApplicative)
 			if expectedResult != actualResultNormal {
 				t.Errorf("parsed statement %s incorrectly with normal order, expected %s but got %s", statement, expectedResult, actualResultNormal)

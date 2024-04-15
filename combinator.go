@@ -141,9 +141,9 @@ func (b Basis) Transform(ctx context.Context, statement string) (string, error) 
 		return "", err
 	}
 	tree := parse(statement)
-	reducedTree, canceled := reduce(ctx, tree, b, false)
-	if canceled {
-		return "", ctx.Err()
+	reducedTree, err := reduce(ctx, tree, b, false, 0)
+	if err != nil {
+		return "", err
 	}
 	return unparse(reducedTree), nil
 }
@@ -159,9 +159,9 @@ func (c Combinator) Transform(ctx context.Context, statement string) (string, er
 		return "", err
 	}
 	tree := parse(statement)
-	reducedTree, canceled := reduce(ctx, tree, Basis{c}, false)
-	if canceled {
-		return "", ctx.Err()
+	reducedTree, err := reduce(ctx, tree, Basis{c}, false, 0)
+	if err != nil {
+		return "", err
 	}
 	return unparse(reducedTree), nil
 }
@@ -184,11 +184,8 @@ func Unparse(tree *Tree) string {
 
 // Reduces the Tree using the Basis `b`
 func (b Basis) Reduce(ctx context.Context, tree *Tree) (*Tree, error) {
-	reduced, canceled := reduce(ctx, tree, b, false)
-	if canceled {
-		return nil, ctx.Err()
-	}
-	return reduced, nil
+	reduced, err := reduce(ctx, tree, b, false, 0)
+	return reduced, err
 }
 
 // Joins the trees together under a new root

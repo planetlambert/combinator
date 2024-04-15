@@ -2,48 +2,57 @@ package combinator
 
 import (
 	"context"
+	"errors"
 	"slices"
 )
 
+var MaxFrames = 10000000
+
 // Reduces the tree `tree` using basis `b`
-func reduce(ctx context.Context, root *Tree, b Basis, applicativeOrder bool) (*Tree, bool) {
+func reduce(ctx context.Context, root *Tree, b Basis, applicativeOrder bool, frameCount int) (*Tree, error) {
 	if ctx.Err() != nil {
-		return nil, true
+		return nil, ctx.Err()
+	}
+	if frameCount > MaxFrames {
+		return nil, errors.New("loop detected")
 	}
 
 	if root.IsLeaf {
-		return root, false
+		return root, nil
 	}
 
 	// Our algorithm is outer-first (we attempt to rewrite before recursing
 	// into the left and right child)
-	newTree, canceled := rewrite(ctx, root, b, applicativeOrder)
-	if canceled {
-		return nil, true
+	newTree, err := rewrite(ctx, root, b, applicativeOrder, frameCount+1)
+	if err != nil {
+		return nil, err
 	}
 	if newTree.IsLeaf {
-		return newTree, false
+		return newTree, nil
 	}
 
 	// Out algorithm is also left-first (we recurse the left subtree first)
-	newTreeLeft, canceled := reduce(ctx, newTree.Left, b, applicativeOrder)
-	if canceled {
-		return nil, true
+	newTreeLeft, err := reduce(ctx, newTree.Left, b, applicativeOrder, frameCount+1)
+	if err != nil {
+		return nil, err
 	}
 	newTree.Left = newTreeLeft
 
-	newTreeRight, canceled := reduce(ctx, newTree.Right, b, applicativeOrder)
+	newTreeRight, err := reduce(ctx, newTree.Right, b, applicativeOrder, frameCount+1)
 	newTree.Right = newTreeRight
-	if canceled {
-		return nil, true
+	if err != nil {
+		return nil, err
 	}
 
-	return newTree, false
+	return newTree, nil
 }
 
-func rewrite(ctx context.Context, root *Tree, b Basis, applicativeOrder bool) (*Tree, bool) {
+func rewrite(ctx context.Context, root *Tree, b Basis, applicativeOrder bool, frameCount int) (*Tree, error) {
 	if ctx.Err() != nil {
-		return nil, true
+		return nil, ctx.Err()
+	}
+	if frameCount > MaxFrames {
+		return nil, errors.New("loop detected")
 	}
 
 	// Rewrite attempts use the left-most leaf of this subtree
@@ -72,9 +81,9 @@ func rewrite(ctx context.Context, root *Tree, b Basis, applicativeOrder bool) (*
 		// Applicative order is when we reduce our arguments before applying our combinator
 		if applicativeOrder {
 			for i := 0; i < len(argumentNodes); i++ {
-				reducedArgumentNode, canceled := reduce(ctx, argumentNodes[i], b, applicativeOrder)
-				if canceled {
-					return nil, true
+				reducedArgumentNode, err := reduce(ctx, argumentNodes[i], b, applicativeOrder, frameCount+1)
+				if err != nil {
+					return nil, err
 				}
 				argumentNodes[i] = reducedArgumentNode
 			}
@@ -98,9 +107,9 @@ func rewrite(ctx context.Context, root *Tree, b Basis, applicativeOrder bool) (*
 		originalRoot := getNthParent(combinatorRoot, numNodesToRoot-numArgs)
 
 		// Recursively rewrite
-		return rewrite(ctx, originalRoot, b, applicativeOrder)
+		return rewrite(ctx, originalRoot, b, applicativeOrder, frameCount+1)
 	}
-	return root, false
+	return root, nil
 }
 
 // Recursively pplies the arguments in `argumentNodes` to the Combinator.

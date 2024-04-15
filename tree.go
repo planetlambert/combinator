@@ -10,14 +10,6 @@ type Tree struct {
 	Leaf   string // If `IsLeaf`, the leaf's content
 }
 
-// Returns the tree's root given any tree
-func getRoot(tree *Tree) *Tree {
-	if tree.IsRoot {
-		return tree
-	}
-	return getRoot(tree.Parent)
-}
-
 // Returns the left-most leaf from the current node
 func getLeftMostLeaf(tree *Tree) *Tree {
 	if tree.IsLeaf {
