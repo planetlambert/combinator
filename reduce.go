@@ -6,7 +6,7 @@ import (
 	"slices"
 )
 
-var MaxFrames = 10000000
+var MaxFrames = 1000000
 
 // Reduces the tree `tree` using basis `b`
 func reduce(ctx context.Context, root *Tree, b Basis, applicativeOrder bool, frameCount int) (*Tree, error) {

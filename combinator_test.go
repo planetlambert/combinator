@@ -79,7 +79,7 @@ func TestChurch(t *testing.T) {
 }
 
 func TestContext(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Millisecond)
 	_, err := BCKW.Transform(ctx, "WWW")
 	if err == nil {
 		t.Error("expected error")
@@ -87,5 +87,15 @@ func TestContext(t *testing.T) {
 	cancel()
 	if err.Error() != context.DeadlineExceeded.Error() {
 		t.Errorf("expected error %s, got %s", context.DeadlineExceeded.Error(), err.Error())
+	}
+}
+
+func TestLoopDetection(t *testing.T) {
+	_, err := BCKW.Transform(context.Background(), "WWW")
+	if err == nil {
+		t.Error("expected error")
+	}
+	if err.Error() != "loop detected" {
+		t.Errorf("expected error loop detected, got %s", err.Error())
 	}
 }
